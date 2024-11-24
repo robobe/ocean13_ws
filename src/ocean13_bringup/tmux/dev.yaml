@@ -1,0 +1,22 @@
+session_name: sitl_mavros
+windows:
+  - window_name: debug
+    layout: tiled
+    suppress_history: false
+    shell_command_before:
+      - cd /workspaces/rome_ws
+      - source install/setup.bash
+    panes:
+      - shell_command: # gazebo
+          - printf '\033]2;gazebo\033\\'
+          - gz sim src/ocean13_gazebo/worlds/sydney_regatta.sdf
+      - shell_command: # sitl
+          - printf '\033]2;SITL\033\\'
+          - src/ocean13_bringup/launch/sitl.sh
+      - shell_command: # mavproxy
+          - printf '\033]2;mavproxy\033\\'
+          - sleep 1
+          - mavproxy.py --master=tcp:127.0.0.1:5760
+          
+
+
