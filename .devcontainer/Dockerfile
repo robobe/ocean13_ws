@@ -1,28 +1,35 @@
-FROM jazzy:gazebo
-# FROM docker.io/humble/cuda:dev
+FROM ocean13:dev
 
-# ** [Optional] Uncomment this section to install additional packages. **
-#
+ARG VERSION=0.0.1
+
+
+RUN echo "OCEAN13 working dev: ${VERSION}">/etc/rome_working_dev
+
+
+
 ENV DEBIAN_FRONTEND=noninteractive
+
+# dev
 RUN apt-get update \
    && apt-get -y install --no-install-recommends \
-    tmux \
-    tmuxp \
-    psmisc \
-    htop \
-    ros-jazzy-rmw-cyclonedds-cpp \
-    python3-colcon-clean \
-    xclip \
+      ros-humble-rqt-robot-steering \
+      rviz \
+      ros-humble-interactive-markers \
+      ros-humble-imu-tools \
    && apt-get autoremove -y \
    && apt-get clean -y \
    && rm -rf /var/lib/apt/lists/*
+
+# runtime
+# RUN apt-get update \
+#    && apt-get -y install --no-install-recommends \
+#    && apt-get autoremove -y \
+#    && apt-get clean -y \
+#    && rm -rf /var/lib/apt/lists/*
+
+
 ENV DEBIAN_FRONTEND=dialog
 
-# Set up auto-source of workspace for ros user
-ARG WORKSPACE
-COPY .devcontainer/.tmux.conf /etc/tmux.conf
-RUN pip3 install --user --break-system-packages MAVProxy
+USER user
 
-# COPY .devcontainer/requirements.txt requirements.txt
-# RUN pip3 install -r requirements.txt
 

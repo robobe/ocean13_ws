@@ -1,0 +1,65 @@
+# version 0.0.2
+# apt: htop
+FROM ocen13:runtime
+
+ARG VERSION="0.0.2"
+
+RUN echo "OCEAN13 dev: ${VERSION}">/etc/pov_dev
+
+
+# region rqt
+RUN apt-get update \
+&& apt-get -y install --no-install-recommends \
+    ros-humble-rqt \
+    ros-humble-qt-gui \
+    ros-humble-rqt-tf-tree \
+    ros-humble-rqt-reconfigure \
+    ros-humble-rqt-common-plugins \
+&& apt-get clean -y \
+&& rm -rf /var/lib/apt/lists/*
+# end region
+
+# region rviz and other tools
+RUN apt-get update \
+&& apt-get -y install --no-install-recommends \
+    ros-humble-image-view \
+    ros-humble-vision-msgs-rviz-plugins \
+    libcanberra-gtk-module \
+    libcanberra-gtk3-module \
+&& apt-get clean -y \
+&& rm -rf /var/lib/apt/lists/*
+#endregion
+
+# region harmonic and other tools
+RUN apt-get update \
+&& apt-get -y install --no-install-recommends \
+   python3-serial \
+   libgz-sim8-dev \
+   rapidjson-dev \
+&& apt-get clean -y \
+&& rm -rf /var/lib/apt/lists/*
+#endregion
+
+#
+# region apt packages
+#
+RUN apt-get update \
+&& apt-get -y install --no-install-recommends \
+    tmuxp \
+    psmisc \
+    htop \
+    python-is-python3 \
+&& apt-get clean -y \
+&& rm -rf /var/lib/apt/lists/*
+# end region
+
+#
+# region mavproxy as user
+#
+USER user
+RUN python3 -m pip install --user MAVProxy
+
+ENV PATH="/home/user/.local/bin:$PATH"
+USER root
+
+#endregion
